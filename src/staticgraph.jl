@@ -5,24 +5,26 @@
 
 A type representing an undirected static graph.
 """
-struct StaticGraph{T<:Integer} <: AbstractStaticGraph
+struct StaticGraph{T<:Integer, U<:Integer} <: AbstractStaticGraph{T, U}
     f_vec::Vector{T}
-    f_ind::Vector{T}
+    f_ind::Vector{U}
 end
 
 badj(g::StaticGraph, s) = fadj(g, s)
 
-ne(g::StaticGraph) = length(g.f_vec) ÷ 2
+ne(g::StaticGraph{T, U}) where T where U = T(length(g.f_vec) ÷ 2)
 
 
 # sorted src, dst vectors
 # note: this requires reverse edges included in the sorted vector.  
-function StaticGraph(n_v, ss::Vector{T}, ds::Vector{T}) where T <: Integer
+function StaticGraph(n_v, ss::AbstractVector, ds::AbstractVector)
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
-    (n_v == 0 || length(ss) == 0) && return StaticGraph(T[], T[1])
+    (n_v == 0 || length(ss) == 0) && return StaticGraph(UInt8[], UInt8[1])
     f_ind = [searchsortedfirst(ss, x) for x in 1:n_v]
     push!(f_ind, length(ss)+1)
-    return StaticGraph{T}(ds, f_ind)
+    T = mintype(ds)
+    U = mintype(f_ind)
+    return StaticGraph{T, U}(convert(Vector{T},ds), convert(Vector{U}, f_ind))
 end
 
 # sorted src, dst tuples
@@ -42,7 +44,7 @@ end
 
 ==(g::StaticGraph, h::StaticGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind
 
-degree(g::StaticGraph, v::Integer) = length(_fvrange(g, v))
+degree(g::StaticGraph{T, U}, v::Integer) where T where U = T(length(_fvrange(g, v)))
 degree(g::StaticGraph) = [degree(g, v) for v in vertices(g)]
 indegree(g::StaticGraph, v::Integer) = degree(g, v)
 indegree(g::StaticGraph) = degree(g)
@@ -56,5 +58,5 @@ outdegree(g::StaticGraph) = degree(g)
 Return `true` if `g` is a directed graph.
 """
 is_directed(::Type{StaticGraph}) = false
-is_directed(::Type{StaticGraph{T}}) where T = false
+is_directed(::Type{StaticGraph{T, U}}) where T where U = false
 is_directed(g::StaticGraph) = false
