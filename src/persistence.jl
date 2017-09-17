@@ -61,5 +61,4 @@ function loadsg(fn::AbstractString, ::SDGFormat{T}) where T <: Integer
 end
 
 loadgraph(fn::AbstractString, gname::String, s::T) where T <: StaticGraphFormat = loadsg(fn, s)
-savegraph(fn::AbstractString, g::AbstractStaticGraph, gname::String) = savegraph(fn, g)
 savegraph(fn::AbstractString, g::AbstractStaticGraph) =  savesg(fn, g, eltype(g))
