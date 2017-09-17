@@ -10,10 +10,6 @@ struct StaticGraph{T<:Integer, U<:Integer} <: AbstractStaticGraph{T, U}
     f_ind::Vector{U}
 end
 
-badj(g::StaticGraph, s) = fadj(g, s)
-
-ne(g::StaticGraph{T, U}) where T where U = T(length(g.f_vec) ÷ 2)
-
 
 # sorted src, dst vectors
 # note: this requires reverse edges included in the sorted vector.  
@@ -42,6 +38,18 @@ function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
     StaticGraph(nv(g), sd)
 end
 
+badj(g::StaticGraph, s) = fadj(g, s)
+
+ne(g::StaticGraph{T, U}) where T where U = T(length(g.f_vec) ÷ 2)
+
+function has_edge(g::StaticGraph, e::StaticGraphEdge)
+    u, v = Tuple(e)
+    (u > nv(g) || v > nv(g)) && return false
+    if degree(g, u) > degree(g, v)
+        u, v = v, u
+    end
+    return insorted(v, fadj(g, u))
+end
 ==(g::StaticGraph, h::StaticGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind
 
 degree(g::StaticGraph{T, U}, v::Integer) where T where U = T(length(_fvrange(g, v)))

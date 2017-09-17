@@ -8,28 +8,24 @@ const testdir = dirname(@__FILE__)
     
 @testset "StaticGraphs" begin
 
-    h = loadgraph(joinpath(testdir, "testdata", "house.jsg"), SGFormat())
-    hu = loadgraph(joinpath(testdir, "testdata", "house-uint8.jsg"), SGFormat(UInt8))
-    dh = loadgraph(joinpath(testdir, "testdata", "pathdg.jsg"), SDGFormat())
-    dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat(UInt8))
+    hu = loadgraph(joinpath(testdir, "testdata", "house-uint8.jsg"), SGFormat())
+    dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
 
     @testset "staticgraph" begin
-        @test sprint(show, StaticGraph(Graph())) == "empty undirected simple static Int64 graph"
+        @test sprint(show, StaticGraph(Graph())) == "empty undirected simple static {UInt8, UInt8} graph"
         g = smallgraph(:house)
         gu = squash(g)
         sg = StaticGraph(g)
         sgu = StaticGraph(gu)
-        @test sprint(show, sg) == "{5, 6} undirected simple static Int64 graph"
-        @test sprint(show, sgu) == "{5, 6} undirected simple static UInt8 graph"
+        @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
+        @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         testfn(fn, args...) =
-            @inferred(fn(h, args...)) == 
             @inferred(fn(hu, args...)) == 
             @inferred(fn(sg, args...)) == 
             @inferred(fn(sgu, args...)) == 
             fn(g, args...)
 
-        @test h == sg
-        @test hu == sgu
+        @test hu == sg == sgu
         @test @inferred eltype(hu) == UInt8
         @test testfn(ne)
         @test testfn(nv)
@@ -49,31 +45,27 @@ const testdir = dirname(@__FILE__)
         @test @inferred has_vertex(hu, 1)
         @test @inferred !has_vertex(hu, 10)
         @test @inferred !is_directed(hu)
-        @test @inferred !is_directed(h)
         @test @inferred !is_directed(StaticGraph)
-        @test @inferred collect(edges(h)) == collect(edges(sg))
+        @test @inferred collect(edges(hu)) == collect(edges(sg))
     end # staticgraph
 
     @testset "staticdigraph" begin
-        @test sprint(show, StaticDiGraph(DiGraph())) == "empty directed simple static Int64 graph"
+        @test sprint(show, StaticDiGraph(DiGraph())) == "empty directed simple static {UInt8, UInt8} graph"
         dg = PathDiGraph(5)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)
         dsgu = StaticDiGraph(dgu)
-        @test sprint(show, dsg) == "{5, 4} directed simple static Int64 graph"
-        @test sprint(show, dsgu) == "{5, 4} directed simple static UInt8 graph"
-        dh = loadgraph(joinpath(testdir, "testdata", "pathdg.jsg"), SDGFormat())
-        dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat(UInt8))
+        @test sprint(show, dsg) == "{5, 4} directed simple static {UInt8, UInt8} graph"
+        @test sprint(show, dsgu) == "{5, 4} directed simple static {UInt8, UInt8} graph"
+        dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
 
         dtestfn(fn, args...) =
-            @inferred(fn(dh, args...)) == 
             @inferred(fn(dhu, args...)) == 
             @inferred(fn(dsg, args...)) == 
             @inferred(fn(dsgu, args...)) == 
             fn(dg, args...)
 
-        @test dh == dsg
-        @test dhu == dsgu
+        @test dhu == dsg == dsgu
         @test @inferred eltype(dhu) == UInt8
         @test dtestfn(ne)
         @test dtestfn(nv)
@@ -93,9 +85,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred has_vertex(dhu, 1)
         @test @inferred !has_vertex(dhu, 10)
         @test @inferred is_directed(dhu)
-        @test @inferred is_directed(dh)
         @test @inferred is_directed(StaticDiGraph)
-        @test @inferred collect(edges(dh)) == collect(edges(dsg))
+        @test @inferred collect(edges(dhu)) == collect(edges(dsg))
     end # staticdigraph
 
     @testset "utils" begin
@@ -110,9 +101,7 @@ const testdir = dirname(@__FILE__)
 
     @testset "persistence" begin
         function writegraphs(f, fio)
-            @test savegraph(f, h) == 1
             @test savegraph(f, hu) == 1
-            @test savegraph(f, dh) == 1
             @test savegraph(f, dhu) == 1
         end
         mktemp(writegraphs)

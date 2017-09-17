@@ -30,8 +30,8 @@ end
 
 function loadsg(fn::AbstractString, ::SDGFormat)
     @load fn f_vec f_ind b_vec b_ind
-    return StaticGraph(f_vec, f_ind, b_vec, b_ind)
+    return StaticDiGraph(f_vec, f_ind, b_vec, b_ind)
 end
 
-loadgraph(fn::AbstractString, gname::String) = loadsg(fn, s)
+loadgraph(fn::AbstractString, gname::String, s::StaticGraphFormat) = loadsg(fn, s)
 savegraph(fn::AbstractString, g::AbstractStaticGraph) =  savesg(fn, g)

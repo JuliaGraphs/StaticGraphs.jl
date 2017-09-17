@@ -33,11 +33,11 @@ function StaticDiGraph(n_v, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::Ab
     push!(b_ind, length(b_ss)+1)
     T = mintype(f_ds)
     U = mintype(f_ind)
-    return StaticDiGraph{T}(
-        convert(T, f_ds), 
-        convert(U, f_ind), 
-        convert(T, b_ds),
-        convert(U, b_ind)
+    return StaticDiGraph{T, U}(
+        convert(Vector{T}, f_ds), 
+        convert(Vector{U}, f_ind), 
+        convert(Vector{T}, b_ds),
+        convert(Vector{U}, b_ind)
     )
 end
 

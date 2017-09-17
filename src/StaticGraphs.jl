@@ -40,9 +40,8 @@ export
 
 include("utils.jl")
 
-const StaticEdgeIter{G} = LightGraphs.SimpleGraphs.SimpleEdgeIter{G}
-const AbstractStaticEdge = AbstractSimpleEdge
-const StaticEdge = SimpleEdge
+const AbstractStaticEdge{T} = AbstractSimpleEdge{T}
+const StaticEdge{T} = SimpleEdge{T}
 
 """
     AbstractStaticGraph
@@ -86,9 +85,9 @@ vertices(g::AbstractStaticGraph{T, U}) where T where U = one(T):nv(g)
 
 
 has_edge(g::AbstractStaticGraph, e::AbstractStaticEdge) =
-    insorted(dst(e), neighbors(g, src(e)))
+    insorted(dst(e), out_neighbors(g, src(e)))
 
-edgetype(g::AbstractStaticGraph) = StaticEdge
+edgetype(g::AbstractStaticGraph{T}) where T = StaticEdge{T}
 edges(g::AbstractStaticGraph) = StaticEdgeIter(g)
 
 has_vertex(g::AbstractStaticGraph, v::Integer) = v in vertices(g)
@@ -108,5 +107,11 @@ include("persistence.jl")
 
 const SGraph = StaticGraph
 const SDiGraph = StaticDiGraph
+
+const StaticEdgeIter{G} = LightGraphs.SimpleGraphs.SimpleEdgeIter{G}
+
+eltype(::Type{StaticEdgeIter{StaticGraph{T, U}}}) where T where U = StaticGraphEdge{T}
+eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGraphEdge{T}
+
 
 end # module
