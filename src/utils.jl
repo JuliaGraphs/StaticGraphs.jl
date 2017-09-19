@@ -27,28 +27,19 @@ From https://github.com/rdeits/NNLS.jl/blob/0a9bf56774595b5735bc738723bd3cb94138
 end
 
 """
-    squashsorted(v)
+    mintype(v)
 
-Returns the sorted vector `v` converted to the smallest possible
-integer type that can fit all values.
+Returns the minimum integer type required to fit all elements
+in sorted vector `v`.
 
 ### Implementation Notes
 `v` is assumed to be sorted.
 """
-function squashsorted(v::AbstractVector)
-    validtypes = [UInt8, UInt16, UInt32, UInt64, UInt128]
-    l = v[end]
-    for T in validtypes
-        l < typemax(T) && return convert(Vector{T}, v)
-    end
-    return v
-end
-
 function mintype(v::AbstractVector)
     validtypes = [UInt8, UInt16, UInt32, UInt64, UInt128]
     l = v[end]
     for T in validtypes
-        l < typemax(T) && return T
+        l <= typemax(T) && return T
     end
     return eltype(v)
 end
