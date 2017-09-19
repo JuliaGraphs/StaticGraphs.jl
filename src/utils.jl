@@ -25,3 +25,23 @@ From https://github.com/rdeits/NNLS.jl/blob/0a9bf56774595b5735bc738723bd3cb94138
         view(parent, range)
     end
 end
+
+"""
+    mintype(v)
+
+Returns the minimum integer type required to fit all elements
+in sorted vector `v`.
+
+### Implementation Notes
+`v` is assumed to be sorted.
+"""
+function mintype(v::AbstractVector)
+    validtypes = [UInt8, UInt16, UInt32, UInt64, UInt128]
+    l = v[end]
+    for T in validtypes
+        l <= typemax(T) && return T
+    end
+    return eltype(v)
+end
+
+    
