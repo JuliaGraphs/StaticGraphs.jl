@@ -40,7 +40,7 @@ end
 
 badj(g::StaticGraph, s) = fadj(g, s)
 
-ne(g::StaticGraph{T, U}) where T where U = T(length(g.f_vec) ÷ 2)
+ne(g::StaticGraph{T, U}) where T where U = U(length(g.f_vec) ÷ 2)
 
 function has_edge(g::StaticGraph, e::StaticGraphEdge)
     u, v = Tuple(e)
