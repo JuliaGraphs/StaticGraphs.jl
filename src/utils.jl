@@ -1,6 +1,6 @@
-immutable UnsafeVectorView{T} <: AbstractVector{T}
-    offset::Int
-    len::Int
+immutable UnsafeVectorView{T,U} <: AbstractVector{T}
+    offset::U
+    len::U
     ptr::Ptr{T}
 end
 
