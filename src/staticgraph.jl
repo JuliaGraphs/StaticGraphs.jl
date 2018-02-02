@@ -15,7 +15,7 @@ end
 function StaticGraph(nv::I, ss::AbstractVector, ds::AbstractVector) where {I<:Integer}
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
     (nv == 0 || length(ss) == 0) && return StaticGraph(UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(ss, x) for x in 1:n_v]
+    f_ind = [searchsortedfirst(ss, x) for x in 1:nv]
     push!(f_ind, length(ss)+1)
     T = mintype(ds)
     U = mintype(f_ind)
@@ -23,10 +23,10 @@ function StaticGraph(nv::I, ss::AbstractVector, ds::AbstractVector) where {I<:In
 end
 
 # sorted src, dst tuples
-function StaticGraph(n_v, sd::Vector{Tuple{T, T}}) where T <: Integer
+function StaticGraph(nv::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Integer}
     ss = [x[1] for x in sd]
     ds = [x[2] for x in sd]
-    return StaticGraph(n_v, ss, ds)
+    return StaticGraph(nv, ss, ds)
 end
 
 function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
