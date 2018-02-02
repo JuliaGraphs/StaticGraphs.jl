@@ -44,15 +44,6 @@ badj(g::StaticGraph, s) = fadj(g, s)
 
 ne(g::StaticGraph{T, U}) where T where U = U(length(g.f_vec) ÷ 2)
 
-function has_edge(g::StaticGraph, e::StaticGraphEdge)
-    u, v = Tuple(e)
-    (u > nv(g) || v > nv(g)) && return false
-    if degree(g, u) > degree(g, v)
-        u, v = v, u
-    end
-    return insorted(v, fadj(g, u))
-end
-
 function in(e::StaticGraphEdge, g::StaticGraph)
     u, v = Tuple(e)
     (u > nv(g) || v > nv(g)) && return false
@@ -61,6 +52,8 @@ function in(e::StaticGraphEdge, g::StaticGraph)
     end
     return insorted(v, fadj(g, u))
 end
+
+has_edge(g::StaticGraph, e::StaticGraphEdge) = in(e, g)
 
 ==(g::StaticGraph, h::StaticGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind
 
