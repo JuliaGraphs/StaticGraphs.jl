@@ -48,17 +48,20 @@ function StaticDiGraph(n_v, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}
     b_ss = [x[1] for x in b_sd]
     b_ds = [x[2] for x in b_sd]
 
-    StaticDiGraph(n_v, f_ss, f_ds, b_ss, b_ds)
+    return StaticDiGraph(n_v, f_ss, f_ds, b_ss, b_ds)
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
 
-    StaticDiGraph(nv(g), f_sd, b_sd)
+    return StaticDiGraph(nv(g), f_sd, b_sd)
 end
-    
-#
+
+function StaticDiGraph()
+    return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
+end
+
 ==(g::StaticDiGraph, h::StaticDiGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind && g.b_vec == h.b_vec && g.b_ind == h.b_ind
 
 degree(g::StaticDiGraph, v::Integer) = indegree(g, v) + outdegree(g, v)
