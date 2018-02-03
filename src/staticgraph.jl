@@ -12,10 +12,10 @@ end
 
 # sorted src, dst vectors
 # note: this requires reverse edges included in the sorted vector.  
-function StaticGraph(nv::I, ss::AbstractVector, ds::AbstractVector) where {I<:Integer}
+function StaticGraph(nvtx::I, ss::AbstractVector, ds::AbstractVector) where {I<:Integer}
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
-    (nv == 0 || length(ss) == 0) && return StaticGraph(UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(ss, x) for x in 1:nv]
+    (nvtx == 0 || length(ss) == 0) && return StaticGraph()
+    f_ind = [searchsortedfirst(ss, x) for x in 1:nvtx]
     push!(f_ind, length(ss)+1)
     T = mintype(ds)
     U = mintype(f_ind)
@@ -23,10 +23,10 @@ function StaticGraph(nv::I, ss::AbstractVector, ds::AbstractVector) where {I<:In
 end
 
 # sorted src, dst tuples
-function StaticGraph(nv::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Integer}
+function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Integer}
     ss = [x[1] for x in sd]
     ds = [x[2] for x in sd]
-    return StaticGraph(nv, ss, ds)
+    return StaticGraph(nvtx, ss, ds)
 end
 
 function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)

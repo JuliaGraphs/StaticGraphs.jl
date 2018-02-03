@@ -24,12 +24,12 @@ end
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
 
 # sorted src, dst vectors for forward and backward edgelists.
-function StaticDiGraph(nv::I, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::AbstractVector, b_ds::AbstractVector) where {I<:Integer}
+function StaticDiGraph(nvtx::I, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::AbstractVector, b_ds::AbstractVector) where {I<:Integer}
     length(f_ss) == length(f_ds) == length(b_ss) == length(b_ds) || error("source and destination vectors must be equal length")
-    (nv == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(f_ss, x) for x in 1:nv]
+    (nvtx == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
+    f_ind = [searchsortedfirst(f_ss, x) for x in 1:nvtx]
     push!(f_ind, length(f_ss)+1)
-    b_ind = [searchsortedfirst(b_ss, x) for x in 1:nv]
+    b_ind = [searchsortedfirst(b_ss, x) for x in 1:nvtx]
     push!(b_ind, length(b_ss)+1)
     T = mintype(f_ds)
     U = mintype(f_ind)
@@ -42,13 +42,13 @@ function StaticDiGraph(nv::I, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::
 end
 
 # sorted src, dst tuples for forward and backward
-function StaticDiGraph(nv::I, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}) where {T<:Integer,I<:Integer}
+function StaticDiGraph(nvtx::I, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}) where {T<:Integer,I<:Integer}
     f_ss = [x[1] for x in f_sd]
     f_ds = [x[2] for x in f_sd]
     b_ss = [x[1] for x in b_sd]
     b_ds = [x[2] for x in b_sd]
 
-    return StaticDiGraph(nv, f_ss, f_ds, b_ss, b_ds)
+    return StaticDiGraph(nvtx, f_ss, f_ds, b_ss, b_ds)
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
