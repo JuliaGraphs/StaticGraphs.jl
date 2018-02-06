@@ -17,6 +17,7 @@ const testdir = dirname(@__FILE__)
         gu = squash(g)
         sg = StaticGraph(g)
         sgu = StaticGraph(gu)
+        gempty = StaticGraph()
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         testfn(fn, args...) =
@@ -49,6 +50,9 @@ const testdir = dirname(@__FILE__)
         @test @inferred !is_directed(hu)
         @test @inferred !is_directed(StaticGraph)
         @test @inferred collect(edges(hu)) == collect(edges(sg))
+        @test nv(gempty) == 0
+        @test typeof(LightGraphs.nv(gempty)) == UInt8
+        @test length(LightGraphs.edges(gempty)) === 0x00
     end # staticgraph
 
     @testset "staticdigraph" begin

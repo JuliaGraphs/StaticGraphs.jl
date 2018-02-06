@@ -24,7 +24,7 @@ end
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
 
 # sorted src, dst vectors for forward and backward edgelists.
-function StaticDiGraph(nvtx::I, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::AbstractVector, b_ds::AbstractVector) where {I<:Integer}
+function StaticDiGraph(nvtx::I, f_ss::AbstractVector{F}, f_ds::AbstractVector{D}, b_ss::AbstractVector{B}, b_ds::AbstractVector{S}) where {I<:Integer,S<:Integer,D<:Integer,B<:Integer,F<:Integer}
     length(f_ss) == length(f_ds) == length(b_ss) == length(b_ds) || error("source and destination vectors must be equal length")
     (nvtx == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
     f_ind = [searchsortedfirst(f_ss, x) for x in 1:nvtx]

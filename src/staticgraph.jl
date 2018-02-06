@@ -11,8 +11,8 @@ struct StaticGraph{T<:Integer, U<:Integer} <: AbstractStaticGraph{T, U}
 end
 
 # sorted src, dst vectors
-# note: this requires reverse edges included in the sorted vector.  
-function StaticGraph(nvtx::I, ss::AbstractVector, ds::AbstractVector) where {I<:Integer}
+# note: this requires reverse edges included in the sorted vector.
+function StaticGraph(nvtx::I, ss::AbstractVector{S}, ds::AbstractVector{D}) where {I<:Integer,S<:Integer,D<:Integer}
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
     (nvtx == 0 || length(ss) == 0) && return StaticGraph()
     f_ind = [searchsortedfirst(ss, x) for x in 1:nvtx]
@@ -29,7 +29,7 @@ function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Int
     return StaticGraph(nvtx, ss, ds)
 end
 
-function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
+function StaticGraph(g::LightGraphs.SimpleGraph)
     sd1 = [Tuple(e) for e in edges(g)]
     ds1 = [Tuple(reverse(e)) for e in edges(g)]
     sd = sort(vcat(sd1, ds1))
