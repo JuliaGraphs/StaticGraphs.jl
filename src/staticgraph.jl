@@ -29,7 +29,7 @@ function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Int
     return StaticGraph(nvtx, ss, ds)
 end
 
-function StaticGraph(g::LightGraphs.SimpleGraph)
+function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
     sd1 = [Tuple(e) for e in edges(g)]
     ds1 = [Tuple(reverse(e)) for e in edges(g)]
     sd = sort(vcat(sd1, ds1))
