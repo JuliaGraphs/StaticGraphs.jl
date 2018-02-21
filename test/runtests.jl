@@ -12,7 +12,7 @@ const testdir = dirname(@__FILE__)
     dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
 
     @testset "staticgraph" begin
-        @test sprint(show, StaticGraph(Graph())) == "empty undirected simple static {UInt8, UInt8} graph"
+        @test sprint(show, StaticGraph(Graph())) == "{0, 0} undirected simple static {UInt8, UInt8} graph"
         g = smallgraph(:house)
         gu = squash(g)
         sg = StaticGraph(g)
@@ -52,7 +52,7 @@ const testdir = dirname(@__FILE__)
     end # staticgraph
 
     @testset "staticdigraph" begin
-        @test sprint(show, StaticDiGraph(DiGraph())) == "empty directed simple static {UInt8, UInt8} graph"
+        @test sprint(show, StaticDiGraph(DiGraph())) == "{0, 0} directed simple static {UInt8, UInt8} graph"
         dg = PathDiGraph(5)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)

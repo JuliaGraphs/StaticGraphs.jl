@@ -57,16 +57,8 @@ indtype(g::AbstractStaticGraph{T, U}) where T where U = U
 eltype(x::AbstractStaticGraph) = vectype(x)
 
 function show(io::IO, g::AbstractStaticGraph)
-    if is_directed(g)
-        dir = "directed"
-    else
-        dir = "undirected"
-    end
-    if nv(g) == 0
-        print(io, "empty $dir simple static {$(vectype(g)), $(indtype(g))} graph")
-    else
-        print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
-    end
+    dir = is_directed(g)? "directed" : "undirected"
+    print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
 end
 
 @inline function _fvrange(g::AbstractStaticGraph, s::Integer)
