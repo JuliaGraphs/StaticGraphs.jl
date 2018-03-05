@@ -17,6 +17,7 @@ const testdir = dirname(@__FILE__)
         gu = squash(g)
         sg = StaticGraph(g)
         sgu = StaticGraph(gu)
+        @test eltype(StaticGraph{UInt128, UInt128}(sgu)) == UInt128
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         testfn(fn, args...) =
@@ -57,6 +58,7 @@ const testdir = dirname(@__FILE__)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)
         dsgu = StaticDiGraph(dgu)
+        @test eltype(StaticDiGraph{UInt128, UInt128}(dsgu)) == UInt128
         @test sprint(show, dsg) == "{5, 4} directed simple static {UInt8, UInt8} graph"
         @test sprint(show, dsgu) == "{5, 4} directed simple static {UInt8, UInt8} graph"
         dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
