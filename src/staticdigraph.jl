@@ -31,8 +31,8 @@ function StaticDiGraph(n_v, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::Ab
     push!(f_ind, length(f_ss)+1)
     b_ind = [searchsortedfirst(b_ss, x) for x in 1:n_v]
     push!(b_ind, length(b_ss)+1)
-    T = mintype(f_ds)
-    U = mintype(f_ind)
+    T = mintype(maximum(f_ds))
+    U = mintype(f_ind[end])
     return StaticDiGraph{T, U}(
         convert(Vector{T}, f_ds), 
         convert(Vector{U}, f_ind), 
@@ -57,7 +57,16 @@ function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
 
     StaticDiGraph(nv(g), f_sd, b_sd)
 end
-    
+
+function StaticDiGraph{T, U}(s::StaticDiGraph) where T <: Integer where U <: Integer
+    new_fvec = T.(s.f_vec)
+    new_find = U.(s.f_ind)
+    new_bvec = T.(s.b_vec)
+    new_bind = U.(s.b_ind)
+    return StaticDiGraph(new_fvec, new_find, new_bvec, new_bind)
+end
+
+
 #
 ==(g::StaticDiGraph, h::StaticDiGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind && g.b_vec == h.b_vec && g.b_ind == h.b_ind
 

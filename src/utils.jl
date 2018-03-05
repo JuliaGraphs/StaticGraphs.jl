@@ -29,19 +29,14 @@ end
 """
     mintype(v)
 
-Returns the minimum integer type required to fit all elements
-in sorted vector `v`.
-
-### Implementation Notes
-`v` is assumed to be sorted.
+Returns the minimum integer type required to represent integer `v`.
 """
-function mintype(v::AbstractVector)
+function mintype(v::T) where T <: Integer
     validtypes = [UInt8, UInt16, UInt32, UInt64, UInt128]
-    l = v[end]
-    for T in validtypes
-        l <= typemax(T) && return T
+    for U in validtypes
+        v <= typemax(U) && return U
     end
-    return eltype(v)
+    return T
 end
 
     

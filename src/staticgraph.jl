@@ -18,9 +18,15 @@ function StaticGraph(n_v, ss::AbstractVector, ds::AbstractVector)
     (n_v == 0 || length(ss) == 0) && return StaticGraph(UInt8[], UInt8[1])
     f_ind = [searchsortedfirst(ss, x) for x in 1:n_v]
     push!(f_ind, length(ss)+1)
-    T = mintype(ds)
-    U = mintype(f_ind)
+    T = mintype(maximum(ds))
+    U = mintype(f_ind[end])
     return StaticGraph{T, U}(convert(Vector{T},ds), convert(Vector{U}, f_ind))
+end
+
+function StaticGraph{T, U}(s::StaticGraph) where T <: Integer where U <: Integer
+    new_fvec = T.(s.f_vec)
+    new_find = U.(s.f_ind)
+    return StaticGraph(new_fvec, new_find)
 end
 
 # sorted src, dst tuples
