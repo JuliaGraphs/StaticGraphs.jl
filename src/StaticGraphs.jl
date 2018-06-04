@@ -10,7 +10,7 @@ import Base:
 import LightGraphs:
     _NI, _insert_and_dedup!, AbstractEdge, AbstractEdgeIter,
     src, dst, edgetype, nv, ne, vertices, edges, is_directed,
-    has_vertex, has_edge, in_neighbors, out_neighbors,
+    has_vertex, has_edge, inneighbors, outneighbors,
     indegree, outdegree, degree, insorted, squash,
 
     AbstractGraphFormat, loadgraph, savegraph
@@ -75,17 +75,16 @@ end
 nv(g::AbstractStaticGraph{T, U}) where T where U = T(length(g.f_ind) - 1)
 vertices(g::AbstractStaticGraph{T, U}) where T where U = one(T):nv(g)
 
-
 has_edge(g::AbstractStaticGraph, e::AbstractStaticEdge) =
-    insorted(dst(e), out_neighbors(g, src(e)))
+    insorted(dst(e), outneighbors(g, src(e)))
 
 edgetype(g::AbstractStaticGraph{T}) where T = StaticEdge{T}
 edges(g::AbstractStaticGraph) = StaticEdgeIter(g)
 
 has_vertex(g::AbstractStaticGraph, v::Integer) = v in vertices(g)
 
-out_neighbors(g::AbstractStaticGraph, v::Integer) = fadj(g, v)
-in_neighbors(g::AbstractStaticGraph, v::Integer) = badj(g, v)
+outneighbors(g::AbstractStaticGraph, v::Integer) = fadj(g, v)
+inneighbors(g::AbstractStaticGraph, v::Integer) = badj(g, v)
 
 zero(g::T) where T<:AbstractStaticGraph = T()
 
@@ -97,6 +96,7 @@ include("staticgraph.jl")
 include("staticdigraph.jl")
 include("persistence.jl")
 
+
 const SGraph = StaticGraph
 const SDiGraph = StaticDiGraph
 
@@ -105,5 +105,6 @@ const StaticEdgeIter{G} = LightGraphs.SimpleGraphs.SimpleEdgeIter{G}
 eltype(::Type{StaticEdgeIter{StaticGraph{T, U}}}) where T where U = StaticGraphEdge{T}
 eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGraphEdge{T}
 
+include("overrides.jl")
 
 end # module
