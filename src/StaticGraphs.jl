@@ -69,7 +69,7 @@ end
 
 @inline function fadj(g::AbstractStaticGraph, s::Integer)
     r = _fvrange(g, s)
-    return fastview(g.f_vec, r)
+    return view(g.f_vec, r)
 end
 
 nv(g::AbstractStaticGraph{T, U}) where T where U = T(length(g.f_ind) - 1)
