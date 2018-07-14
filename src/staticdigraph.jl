@@ -84,5 +84,5 @@ outdegree(g::StaticDiGraph) = [outdegree(g, v) for v in vertices(g)]
 Return `true` if `g` is a directed graph.
 """
 is_directed(::Type{StaticDiGraph}) = true
-is_directed(::Type{StaticDiGraph{T}}) where T = true
+is_directed(::Type{StaticDiGraph{T, U}}) where T where U = true
 is_directed(g::StaticDiGraph) = true
