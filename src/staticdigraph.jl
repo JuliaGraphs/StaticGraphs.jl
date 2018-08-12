@@ -18,7 +18,7 @@ end
 
 @inline function badj(g::StaticDiGraph, s)
     r = _bvrange(g, s)
-    return fastview(g.b_vec, r)
+    return view(g.b_vec, r)
 end
 
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
@@ -52,6 +52,7 @@ function StaticDiGraph(n_v, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
+    ne(g) == 0 && return StaticDiGraph(nv(g), Array{Tuple{UInt8, UInt8},1}(), Array{Tuple{UInt8, UInt8},1}())
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
 
