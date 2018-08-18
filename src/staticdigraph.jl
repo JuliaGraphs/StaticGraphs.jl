@@ -50,6 +50,7 @@ function StaticDiGraph(n_v, f_sd::Vector{Tuple{T,T}}, b_sd::Vector{Tuple{T,T}}) 
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
+    ne(g) == 0 && return StaticDiGraph(nv(g), Array{Tuple{UInt8, UInt8},1}(), Array{Tuple{UInt8, UInt8},1}())
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
 
@@ -82,5 +83,5 @@ outdegree(g::StaticDiGraph) = [outdegree(g, v) for v in vertices(g)]
 Return `true` if `g` is a directed graph.
 """
 is_directed(::Type{StaticDiGraph}) = true
-is_directed(::Type{StaticDiGraph{T}}) where T = true
+is_directed(::Type{StaticDiGraph{T, U}}) where T where U = true
 is_directed(g::StaticDiGraph) = true

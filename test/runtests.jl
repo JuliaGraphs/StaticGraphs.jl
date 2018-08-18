@@ -1,7 +1,7 @@
 using StaticGraphs
 using LightGraphs
 using LightGraphs.SimpleGraphs
-using Base.Test
+using Test
 
 const testdir = dirname(@__FILE__)
 
@@ -30,8 +30,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred eltype(hu) == UInt8
         @test testfn(ne)
         @test testfn(nv)
-        @test testfn(in_neighbors, 1)
-        @test testfn(out_neighbors, 1)
+        @test testfn(inneighbors, 1)
+        @test testfn(outneighbors, 1)
         @test testfn(vertices)
         @test testfn(degree)
         @test testfn(degree, 1)
@@ -73,8 +73,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred eltype(dhu) == UInt8
         @test dtestfn(ne)
         @test dtestfn(nv)
-        @test dtestfn(in_neighbors, 1)
-        @test dtestfn(out_neighbors, 1)
+        @test dtestfn(inneighbors, 1)
+        @test dtestfn(outneighbors, 1)
         @test dtestfn(vertices)
         @test dtestfn(degree)
         @test dtestfn(degree, 1)
