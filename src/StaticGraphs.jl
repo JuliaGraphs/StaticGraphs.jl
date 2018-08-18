@@ -75,7 +75,6 @@ end
 nv(g::AbstractStaticGraph{T, U}) where T where U = T(length(g.f_ind) - 1)
 vertices(g::AbstractStaticGraph{T, U}) where T where U = one(T):nv(g)
 
-
 has_edge(g::AbstractStaticGraph, e::AbstractStaticEdge) =
     insorted(dst(e), outneighbors(g, src(e)))
 
@@ -97,6 +96,7 @@ include("staticgraph.jl")
 include("staticdigraph.jl")
 include("persistence.jl")
 
+
 const SGraph = StaticGraph
 const SDiGraph = StaticDiGraph
 
@@ -105,5 +105,6 @@ const StaticEdgeIter{G} = LightGraphs.SimpleGraphs.SimpleEdgeIter{G}
 eltype(::Type{StaticEdgeIter{StaticGraph{T, U}}}) where T where U = StaticGraphEdge{T}
 eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGraphEdge{T}
 
+include("overrides.jl")
 
 end # module
