@@ -10,13 +10,12 @@ struct StaticGraph{T<:Integer, U<:Integer} <: AbstractStaticGraph{T, U}
     f_ind::Vector{U}
 end
 
-
 # sorted src, dst vectors
-# note: this requires reverse edges included in the sorted vector.  
-function StaticGraph(n_v, ss::AbstractVector, ds::AbstractVector)
+# note: this requires reverse edges included in the sorted vector.
+function StaticGraph(nvtx::I, ss::AbstractVector{S}, ds::AbstractVector{D}) where {I<:Integer,S<:Integer,D<:Integer}
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
-    (n_v == 0 || length(ss) == 0) && return StaticGraph(UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(ss, x) for x in 1:n_v]
+    (nvtx == 0 || length(ss) == 0) && return StaticGraph()
+    f_ind = [searchsortedfirst(ss, x) for x in Base.OneTo(nvtx)]
     push!(f_ind, length(ss)+1)
     T = mintype(maximum(ds))
     U = mintype(f_ind[end])
@@ -30,26 +29,29 @@ function StaticGraph{T, U}(s::StaticGraph) where T <: Integer where U <: Integer
 end
 
 # sorted src, dst tuples
-function StaticGraph(n_v, sd::Vector{Tuple{T, T}}) where T <: Integer
+function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Integer}
     ss = [x[1] for x in sd]
     ds = [x[2] for x in sd]
-    StaticGraph(n_v, ss, ds)
+    return StaticGraph(nvtx, ss, ds)
 end
 
 function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
     ne(g) == 0 && return StaticGraph(nv(g), Array{Tuple{UInt8, UInt8},1}())
     sd1 = [Tuple(e) for e in edges(g)]
     ds1 = [Tuple(reverse(e)) for e in edges(g)]
-
     sd = sort(vcat(sd1, ds1))
-    StaticGraph(nv(g), sd)
+    return StaticGraph(nv(g), sd)
+end
+
+function StaticGraph()
+    return StaticGraph(UInt8[], UInt8[1])
 end
 
 badj(g::StaticGraph, s) = fadj(g, s)
 
 ne(g::StaticGraph{T, U}) where T where U = U(length(g.f_vec) ÷ 2)
 
-function has_edge(g::StaticGraph, e::StaticGraphEdge)
+function has_edge(e::StaticGraphEdge, g::StaticGraph)
     u, v = Tuple(e)
     (u > nv(g) || v > nv(g)) && return false
     if degree(g, u) > degree(g, v)
@@ -57,6 +59,7 @@ function has_edge(g::StaticGraph, e::StaticGraphEdge)
     end
     return insorted(v, fadj(g, u))
 end
+
 ==(g::StaticGraph, h::StaticGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind
 
 degree(g::StaticGraph{T, U}, v::Integer) where T where U = T(length(_fvrange(g, v)))

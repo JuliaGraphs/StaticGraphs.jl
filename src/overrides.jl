@@ -11,4 +11,3 @@ function adjacency_matrix(g::StaticDiGraph{I,U}, T::DataType; dir = :out) where 
     dir != :out && @warn("direction `$dir` not defined for adjacency matrices on StaticGraphs; defaulting to `out`")
     return z
 end
-

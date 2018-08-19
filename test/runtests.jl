@@ -17,6 +17,8 @@ const testdir = dirname(@__FILE__)
         gu = squash(g)
         sg = StaticGraph(g)
         sgu = StaticGraph(gu)
+        gempty = StaticGraph()
+        gdempty = StaticDiGraph()
         @test eltype(StaticGraph{UInt128, UInt128}(sgu)) == UInt128
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
@@ -55,6 +57,14 @@ const testdir = dirname(@__FILE__)
         @test z[1,2]
         @test !z[1,4]
         @test z == adjacency_matrix(hu, Bool, dir=:in) == adjacency_matrix(hu, Bool, dir=:both)
+
+        # empty constructors
+        @test nv(gempty) === 0x00
+        @test typeof(LightGraphs.nv(gempty)) == UInt8
+        @test length(LightGraphs.edges(gempty)) === 0x00
+        @test nv(gdempty) === 0x00
+        @test length(LightGraphs.edges(gdempty)) === 0x00
+
     end # staticgraph
 
     @testset "staticdigraph" begin
