@@ -108,7 +108,7 @@ const testdir = dirname(@__FILE__)
     end # staticdigraph
 
     @testset "utils" begin
-        @test typeof(StaticGraphs.mintype(BigInt(1e100x))) == BigInt
+        @test typeof(StaticGraphs.mintype(BigInt(1e100))) == BigInt
     end # utils
 
     @testset "persistence" begin
