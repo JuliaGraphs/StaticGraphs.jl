@@ -44,11 +44,11 @@ const AbstractStaticEdge{T} = AbstractSimpleEdge{T}
 const StaticEdge{T} = SimpleEdge{T}
 
 """
-    AbstractStaticGraph
+    AbstractStaticGraph{T, U}
 
-An abstract type representing a simple graph structure.
-AbstractStaticGraphs must have the following elements:
-- weightmx::AbstractSparseMatrix{Real}
+An abstract type representing a simple graph structure parameterized by integer types
+- `T`: the type representing the graph's vertices
+- `U`: the type representing the number of edges in the graph
 """
 abstract type AbstractStaticGraph{T<:Integer, U<:Integer} <: AbstractSimpleGraph{T} end
 
