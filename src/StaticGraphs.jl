@@ -73,7 +73,7 @@ end
 end
 
 nv(g::AbstractStaticGraph{T, U}) where T where U = T(length(g.f_ind) - 1)
-vertices(g::AbstractStaticGraph{T, U}) where T where U = one(T):nv(g)
+vertices(g::AbstractStaticGraph{T, U}) where T where U = Base.OneTo(nv(g))
 
 has_edge(g::AbstractStaticGraph, e::AbstractStaticEdge) =
     insorted(dst(e), outneighbors(g, src(e)))
