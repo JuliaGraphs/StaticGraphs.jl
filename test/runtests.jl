@@ -108,13 +108,7 @@ const testdir = dirname(@__FILE__)
     end # staticdigraph
 
     @testset "utils" begin
-        A = [1:5;]
-        B = StaticGraphs.view(A, 2:3)
-        @test @inferred B == [2,3]
-        B[1] = 5
-        @test @inferred A == [1,5,3,4,5]
-        A = ["a", "b", "c", "d"]
-        @test @inferred StaticGraphs.view(A, 2:3) == ["b", "c"]
+        @test typeof(StaticGraphs.mintype(BigInt(1e100))) == BigInt
     end # utils
 
     @testset "persistence" begin
