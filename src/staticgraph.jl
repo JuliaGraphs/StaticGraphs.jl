@@ -15,7 +15,7 @@ end
 function StaticGraph(nvtx::I, ss::AbstractVector{S}, ds::AbstractVector{D}) where {I<:Integer,S<:Integer,D<:Integer}
     length(ss) != length(ds) && error("source and destination vectors must be equal length")
     (nvtx == 0 || length(ss) == 0) && return StaticGraph()
-    f_ind = [searchsortedfirst(ss, x) for x in 1:nvtx]
+    f_ind = [searchsortedfirst(ss, x) for x in Base.OneTo(nvtx)]
     push!(f_ind, length(ss)+1)
     T = mintype(maximum(ds))
     U = mintype(f_ind[end])

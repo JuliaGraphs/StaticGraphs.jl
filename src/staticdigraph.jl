@@ -27,9 +27,9 @@ ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
 function StaticDiGraph(nvtx::I, f_ss::AbstractVector{F}, f_ds::AbstractVector{D}, b_ss::AbstractVector{B}, b_ds::AbstractVector{S}) where {I<:Integer,S<:Integer,D<:Integer,B<:Integer,F<:Integer}
     length(f_ss) == length(f_ds) == length(b_ss) == length(b_ds) || error("source and destination vectors must be equal length")
     (nvtx == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(f_ss, x) for x in 1:nvtx]
+    f_ind = [searchsortedfirst(f_ss, x) for x in Base.OneTo(nvtx)]
     push!(f_ind, length(f_ss)+1)
-    b_ind = [searchsortedfirst(b_ss, x) for x in 1:nvtx]
+    b_ind = [searchsortedfirst(b_ss, x) for x in Base.OneTo(nvtx)]
     push!(b_ind, length(b_ss)+1)
     T = mintype(maximum(f_ds))
     U = mintype(f_ind[end])
