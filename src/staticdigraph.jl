@@ -91,3 +91,5 @@ is_directed(::Type{StaticDiGraph}) = true
 is_directed(::Type{StaticDiGraph{T}}) where T = true
 is_directed(::Type{StaticDiGraph{T, U}}) where T where U = true
 is_directed(g::StaticDiGraph) = true
+
+reverse(g::StaticDiGraph) = StaticDiGraph(copy(g.b_vec), copy(g.b_ind), copy(g.f_vec), copy(g.f_ind))
