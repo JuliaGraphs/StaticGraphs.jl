@@ -2,6 +2,7 @@ module StaticGraphs
 
 using LightGraphs
 using JLD2
+using SparseArrays
 
 import Base:
     convert, eltype, show, ==, Pair, Tuple, in, copy, length, issubset, zero, one,
@@ -12,8 +13,7 @@ import LightGraphs:
     src, dst, edgetype, nv, ne, vertices, edges, is_directed,
     has_vertex, has_edge, inneighbors, outneighbors,
     indegree, outdegree, degree, insorted, squash,
-
-    AbstractGraphFormat, loadgraph, savegraph
+    AbstractGraphFormat, loadgraph, savegraph, reverse
 
 import LightGraphs.SimpleGraphs: 
     AbstractSimpleGraph, 

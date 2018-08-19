@@ -50,6 +50,11 @@ const testdir = dirname(@__FILE__)
         @test @inferred !is_directed(hu)
         @test @inferred !is_directed(StaticGraph)
         @test @inferred collect(edges(hu)) == collect(edges(sg))
+
+        z = @inferred(adjacency_matrix(hu, Bool, dir=:out))
+        @test z[1,2]
+        @test !z[1,4]
+        @test z == adjacency_matrix(hu, Bool, dir=:in) == adjacency_matrix(hu, Bool, dir=:both)
     end # staticgraph
 
     @testset "staticdigraph" begin
@@ -91,6 +96,15 @@ const testdir = dirname(@__FILE__)
         @test @inferred is_directed(dhu)
         @test @inferred is_directed(StaticDiGraph)
         @test @inferred collect(edges(dhu)) == collect(edges(dsg))
+
+        z = @inferred(adjacency_matrix(dhu, Bool, dir=:out))
+        @test z[1,2]
+        @test !z[2,1]
+        z = @inferred(adjacency_matrix(dhu, Bool, dir=:in))
+        @test z[2,1]
+        @test !z[1,2]
+        @test_logs (:warn, r".*") adjacency_matrix(dhu, Bool, dir=:both) == adjacency_matrix(dhu, Bool)
+
     end # staticdigraph
 
     @testset "utils" begin
