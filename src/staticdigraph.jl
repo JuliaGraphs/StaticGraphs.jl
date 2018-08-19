@@ -24,12 +24,12 @@ end
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
 
 # sorted src, dst vectors for forward and backward edgelists.
-function StaticDiGraph(n_v, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::AbstractVector, b_ds::AbstractVector)
+function StaticDiGraph(nvtx::I, f_ss::AbstractVector{F}, f_ds::AbstractVector{D}, b_ss::AbstractVector{B}, b_ds::AbstractVector{S}) where {I<:Integer,S<:Integer,D<:Integer,B<:Integer,F<:Integer}
     length(f_ss) == length(f_ds) == length(b_ss) == length(b_ds) || error("source and destination vectors must be equal length")
-    (n_v == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
-    f_ind = [searchsortedfirst(f_ss, x) for x in 1:n_v]
+    (nvtx == 0 || length(f_ss) == 0) && return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
+    f_ind = [searchsortedfirst(f_ss, x) for x in Base.OneTo(nvtx)]
     push!(f_ind, length(f_ss)+1)
-    b_ind = [searchsortedfirst(b_ss, x) for x in 1:n_v]
+    b_ind = [searchsortedfirst(b_ss, x) for x in Base.OneTo(nvtx)]
     push!(b_ind, length(b_ss)+1)
     T = mintype(maximum(f_ds))
     U = mintype(f_ind[end])
@@ -42,13 +42,13 @@ function StaticDiGraph(n_v, f_ss::AbstractVector, f_ds::AbstractVector, b_ss::Ab
 end
 
 # sorted src, dst tuples for forward and backward
-function StaticDiGraph(n_v, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}) where T <: Integer
+function StaticDiGraph(nvtx::I, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T, T}}) where {T<:Integer,I<:Integer}
     f_ss = [x[1] for x in f_sd]
     f_ds = [x[2] for x in f_sd]
     b_ss = [x[1] for x in b_sd]
     b_ds = [x[2] for x in b_sd]
 
-    StaticDiGraph(n_v, f_ss, f_ds, b_ss, b_ds)
+    return StaticDiGraph(nvtx, f_ss, f_ds, b_ss, b_ds)
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
@@ -56,7 +56,11 @@ function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
 
-    StaticDiGraph(nv(g), f_sd, b_sd)
+    return StaticDiGraph(nv(g), f_sd, b_sd)
+end
+
+function StaticDiGraph()
+    return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
 end
 
 function StaticDiGraph{T, U}(s::StaticDiGraph) where T <: Integer where U <: Integer
@@ -68,7 +72,6 @@ function StaticDiGraph{T, U}(s::StaticDiGraph) where T <: Integer where U <: Int
 end
 
 
-#
 ==(g::StaticDiGraph, h::StaticDiGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind && g.b_vec == h.b_vec && g.b_ind == h.b_ind
 
 degree(g::StaticDiGraph, v::Integer) = indegree(g, v) + outdegree(g, v)
@@ -85,5 +88,6 @@ outdegree(g::StaticDiGraph) = [outdegree(g, v) for v in vertices(g)]
 Return `true` if `g` is a directed graph.
 """
 is_directed(::Type{StaticDiGraph}) = true
+is_directed(::Type{StaticDiGraph{T}}) where T = true
 is_directed(::Type{StaticDiGraph{T, U}}) where T where U = true
 is_directed(g::StaticDiGraph) = true
