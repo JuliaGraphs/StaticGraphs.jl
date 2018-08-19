@@ -4,7 +4,7 @@ os:
   - linux
 #  - osx
 julia:
-  - 0.6
+  -1.0
   - nightly
 
 matrix:
@@ -29,4 +29,4 @@ git:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("StaticGraphs"); Pkg.test("StaticGraphs"; coverage=true)'
 after_success:
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("StaticGraphs")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using Pkg; cd(Pkg.dir("StaticGraphs")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'

@@ -18,7 +18,7 @@ end
 
 @inline function badj(g::StaticDiGraph, s)
     r = _bvrange(g, s)
-    return fastview(g.b_vec, r)
+    return view(g.b_vec, r)
 end
 
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
@@ -31,8 +31,8 @@ function StaticDiGraph(nvtx::I, f_ss::AbstractVector{F}, f_ds::AbstractVector{D}
     push!(f_ind, length(f_ss)+1)
     b_ind = [searchsortedfirst(b_ss, x) for x in 1:nvtx]
     push!(b_ind, length(b_ss)+1)
-    T = mintype(f_ds)
-    U = mintype(f_ind)
+    T = mintype(maximum(f_ds))
+    U = mintype(f_ind[end])
     return StaticDiGraph{T, U}(
         convert(Vector{T}, f_ds), 
         convert(Vector{U}, f_ind), 
@@ -52,6 +52,7 @@ function StaticDiGraph(nvtx::I, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T,
 end
 
 function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
+    ne(g) == 0 && return StaticDiGraph(nv(g), Array{Tuple{UInt8, UInt8},1}(), Array{Tuple{UInt8, UInt8},1}())
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
 
@@ -61,6 +62,15 @@ end
 function StaticDiGraph()
     return StaticDiGraph(UInt8[], UInt8[1], UInt8[], UInt8[1])
 end
+
+function StaticDiGraph{T, U}(s::StaticDiGraph) where T <: Integer where U <: Integer
+    new_fvec = T.(s.f_vec)
+    new_find = U.(s.f_ind)
+    new_bvec = T.(s.b_vec)
+    new_bind = U.(s.b_ind)
+    return StaticDiGraph(new_fvec, new_find, new_bvec, new_bind)
+end
+
 
 ==(g::StaticDiGraph, h::StaticDiGraph) = g.f_vec == h.f_vec && g.f_ind == h.f_ind && g.b_vec == h.b_vec && g.b_ind == h.b_ind
 
@@ -79,4 +89,5 @@ Return `true` if `g` is a directed graph.
 """
 is_directed(::Type{StaticDiGraph}) = true
 is_directed(::Type{StaticDiGraph{T}}) where T = true
+is_directed(::Type{StaticDiGraph{T, U}}) where T where U = true
 is_directed(g::StaticDiGraph) = true

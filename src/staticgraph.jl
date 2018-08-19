@@ -17,9 +17,15 @@ function StaticGraph(nvtx::I, ss::AbstractVector{S}, ds::AbstractVector{D}) wher
     (nvtx == 0 || length(ss) == 0) && return StaticGraph()
     f_ind = [searchsortedfirst(ss, x) for x in 1:nvtx]
     push!(f_ind, length(ss)+1)
-    T = mintype(ds)
-    U = mintype(f_ind)
+    T = mintype(maximum(ds))
+    U = mintype(f_ind[end])
     return StaticGraph{T, U}(convert(Vector{T},ds), convert(Vector{U}, f_ind))
+end
+
+function StaticGraph{T, U}(s::StaticGraph) where T <: Integer where U <: Integer
+    new_fvec = T.(s.f_vec)
+    new_find = U.(s.f_ind)
+    return StaticGraph(new_fvec, new_find)
 end
 
 # sorted src, dst tuples
@@ -30,6 +36,7 @@ function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Int
 end
 
 function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
+    ne(g) == 0 && return StaticGraph(nv(g), Array{Tuple{UInt8, UInt8},1}())
     sd1 = [Tuple(e) for e in edges(g)]
     ds1 = [Tuple(reverse(e)) for e in edges(g)]
     sd = sort(vcat(sd1, ds1))

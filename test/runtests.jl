@@ -1,7 +1,7 @@
 using StaticGraphs
 using LightGraphs
 using LightGraphs.SimpleGraphs
-using Base.Test
+using Test
 
 const testdir = dirname(@__FILE__)
 
@@ -19,6 +19,7 @@ const testdir = dirname(@__FILE__)
         sgu = StaticGraph(gu)
         gempty = StaticGraph()
         gdempty = StaticDiGraph()
+        @test eltype(StaticGraph{UInt128, UInt128}(sgu)) == UInt128
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         testfn(fn, args...) =
@@ -31,8 +32,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred eltype(hu) == UInt8
         @test testfn(ne)
         @test testfn(nv)
-        @test testfn(in_neighbors, 1)
-        @test testfn(out_neighbors, 1)
+        @test testfn(inneighbors, 1)
+        @test testfn(outneighbors, 1)
         @test testfn(vertices)
         @test testfn(degree)
         @test testfn(degree, 1)
@@ -65,6 +66,7 @@ const testdir = dirname(@__FILE__)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)
         dsgu = StaticDiGraph(dgu)
+        @test eltype(StaticDiGraph{UInt128, UInt128}(dsgu)) == UInt128
         @test sprint(show, dsg) == "{5, 4} directed simple static {UInt8, UInt8} graph"
         @test sprint(show, dsgu) == "{5, 4} directed simple static {UInt8, UInt8} graph"
         dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
@@ -79,8 +81,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred eltype(dhu) == UInt8
         @test dtestfn(ne)
         @test dtestfn(nv)
-        @test dtestfn(in_neighbors, 1)
-        @test dtestfn(out_neighbors, 1)
+        @test dtestfn(inneighbors, 1)
+        @test dtestfn(outneighbors, 1)
         @test dtestfn(vertices)
         @test dtestfn(degree)
         @test dtestfn(degree, 1)
@@ -101,12 +103,12 @@ const testdir = dirname(@__FILE__)
 
     @testset "utils" begin
         A = [1:5;]
-        B = StaticGraphs.fastview(A, 2:3)
+        B = StaticGraphs.view(A, 2:3)
         @test @inferred B == [2,3]
         B[1] = 5
         @test @inferred A == [1,5,3,4,5]
         A = ["a", "b", "c", "d"]
-        @test @inferred StaticGraphs.fastview(A, 2:3) == ["b", "c"]
+        @test @inferred StaticGraphs.view(A, 2:3) == ["b", "c"]
     end # utils
 
     @testset "persistence" begin
