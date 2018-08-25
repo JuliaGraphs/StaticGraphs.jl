@@ -53,6 +53,11 @@ const testdir = dirname(@__FILE__)
         @test @inferred !is_directed(StaticGraph)
         @test @inferred collect(edges(hu)) == collect(edges(sg))
 
+        (g1, m1) = @inferred induced_subgraph(hu, [3,2,1])
+        g2 = @inferred hu[3:-1:1]
+        @test g1 == g2
+        @test m1 == [3,2,1]
+
         z = @inferred(adjacency_matrix(hu, Bool, dir=:out))
         @test z[1,2]
         @test !z[1,4]
@@ -106,6 +111,11 @@ const testdir = dirname(@__FILE__)
         @test @inferred is_directed(dhu)
         @test @inferred is_directed(StaticDiGraph)
         @test @inferred collect(edges(dhu)) == collect(edges(dsg))
+
+        (g1, m1) = @inferred induced_subgraph(dhu, [3,2,1])
+        g2 = @inferred dhu[3:-1:1]
+        @test g1 == g2
+        @test m1 == [3,2,1]
 
         z = @inferred(adjacency_matrix(dhu, Bool, dir=:out))
         @test z[1,2]
