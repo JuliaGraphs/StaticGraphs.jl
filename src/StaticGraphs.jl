@@ -72,6 +72,9 @@ end
     return view(g.f_vec, r)
 end
 
+
+@inline fadj(g::AbstractStaticGraph) = [fadj(g, v) for v in vertices(g)]
+
 nv(g::AbstractStaticGraph{T, U}) where T where U = T(length(g.f_ind) - 1)
 vertices(g::AbstractStaticGraph{T, U}) where T where U = Base.OneTo(nv(g))
 

@@ -52,6 +52,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred !is_directed(hu)
         @test @inferred !is_directed(StaticGraph)
         @test @inferred collect(edges(hu)) == collect(edges(sg))
+        @test @inferred StaticGraphs.fadj(hu) == [StaticGraphs.fadj(hu, x) for x in vertices(hu)]
+        @test @inferred StaticGraphs.badj(hu) == StaticGraphs.fadj(hu)
 
         (g1, m1) = @inferred induced_subgraph(hu, [3,2,1])
         g2 = @inferred hu[3:-1:1]
@@ -74,7 +76,7 @@ const testdir = dirname(@__FILE__)
 
     @testset "staticdigraph" begin
         @test sprint(show, StaticDiGraph(DiGraph())) == "{0, 0} directed simple static {UInt8, UInt8} graph"
-        dg = PathDiGraph(5)
+        dg = path_digraph(5)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)
         dsgu = StaticDiGraph(dgu)
@@ -111,6 +113,8 @@ const testdir = dirname(@__FILE__)
         @test @inferred is_directed(dhu)
         @test @inferred is_directed(StaticDiGraph)
         @test @inferred collect(edges(dhu)) == collect(edges(dsg))
+        @test @inferred StaticGraphs.fadj(dhu) == [StaticGraphs.fadj(dhu, x) for x in vertices(dhu)]
+        @test @inferred StaticGraphs.badj(dhu) == [StaticGraphs.badj(dhu, x) for x in vertices(dhu)]
 
         (g1, m1) = @inferred induced_subgraph(dhu, [3,2,1])
         g2 = @inferred dhu[3:-1:1]

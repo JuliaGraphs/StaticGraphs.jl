@@ -21,6 +21,8 @@ end
     return view(g.b_vec, r)
 end
 
+@inline badj(g) = [badj(g, v) for v in vertices(g)]
+
 ne(g::StaticDiGraph{T, U}) where T where U = U(length(g.f_vec))
 
 # sorted src, dst vectors for forward and backward edgelists.
