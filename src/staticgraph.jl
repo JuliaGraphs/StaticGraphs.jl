@@ -48,6 +48,7 @@ function StaticGraph()
 end
 
 badj(g::StaticGraph, s) = fadj(g, s)
+badj(g::StaticGraph) = fadj(g)
 
 ne(g::StaticGraph{T, U}) where T where U = U(length(g.f_vec) ÷ 2)
 
