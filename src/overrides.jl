@@ -1,5 +1,5 @@
-import LightGraphs.LinAlg: adjacency_matrix
-import LightGraphs: induced_subgraph
+import Graphs.LinAlg: adjacency_matrix
+import Graphs: induced_subgraph
 
 adjacency_matrix(g::StaticGraph{I,U}, T::DataType; dir = :out!) where I<:Integer where U<:Integer =
     SparseMatrixCSC{T,I}(nv(g), nv(g), g.f_ind, g.f_vec, ones(T, ne(g)*2))

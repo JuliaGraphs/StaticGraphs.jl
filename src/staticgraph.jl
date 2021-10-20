@@ -35,7 +35,7 @@ function StaticGraph(nvtx::I, sd::Vector{Tuple{T, T}}) where {T<:Integer, I<:Int
     return StaticGraph(nvtx, ss, ds)
 end
 
-function StaticGraph(g::LightGraphs.SimpleGraphs.SimpleGraph)
+function StaticGraph(g::Graphs.SimpleGraphs.SimpleGraph)
     ne(g) == 0 && return StaticGraph(nv(g), Array{Tuple{UInt8, UInt8},1}())
     sd1 = [Tuple(e) for e in edges(g)]
     ds1 = [Tuple(reverse(e)) for e in edges(g)]

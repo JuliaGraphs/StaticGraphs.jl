@@ -1,6 +1,6 @@
 using StaticGraphs
-using LightGraphs
-using LightGraphs.SimpleGraphs
+using Graphs
+using Graphs.SimpleGraphs
 using Test
 
 const testdir = dirname(@__FILE__)
@@ -67,10 +67,10 @@ const testdir = dirname(@__FILE__)
 
         # empty constructors
         @test nv(gempty) === 0x00
-        @test typeof(LightGraphs.nv(gempty)) == UInt8
-        @test length(LightGraphs.edges(gempty)) === 0x00
+        @test typeof(Graphs.nv(gempty)) == UInt8
+        @test length(Graphs.edges(gempty)) === 0x00
         @test nv(gdempty) === 0x00
-        @test length(LightGraphs.edges(gdempty)) === 0x00
+        @test length(Graphs.edges(gdempty)) === 0x00
 
     end # staticgraph
 

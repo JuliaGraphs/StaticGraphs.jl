@@ -53,7 +53,7 @@ function StaticDiGraph(nvtx::I, f_sd::Vector{Tuple{T, T}}, b_sd::Vector{Tuple{T,
     return StaticDiGraph(nvtx, f_ss, f_ds, b_ss, b_ds)
 end
 
-function StaticDiGraph(g::LightGraphs.SimpleGraphs.SimpleDiGraph)
+function StaticDiGraph(g::Graphs.SimpleGraphs.SimpleDiGraph)
     ne(g) == 0 && return StaticDiGraph(nv(g), Array{Tuple{UInt8, UInt8},1}(), Array{Tuple{UInt8, UInt8},1}())
     f_sd = [Tuple(e) for e in edges(g)]
     b_sd = sort([Tuple(reverse(e)) for e in edges(g)])
