@@ -1,6 +1,6 @@
 module StaticGraphs
 
-using LightGraphs
+using Graphs
 using JLD2
 using SparseArrays
 
@@ -8,14 +8,14 @@ import Base:
     convert, eltype, show, ==, Pair, Tuple, in, copy, length, issubset, zero, one,
     size, getindex, setindex!, length, IndexStyle
 
-import LightGraphs:
+import Graphs:
     _NI, AbstractEdge, AbstractEdgeIter,
     src, dst, edgetype, nv, ne, vertices, edges, is_directed,
     has_vertex, has_edge, inneighbors, outneighbors,
     indegree, outdegree, degree, insorted, squash,
     AbstractGraphFormat, loadgraph, savegraph, reverse
 
-import LightGraphs.SimpleGraphs: 
+import Graphs.SimpleGraphs: 
     AbstractSimpleGraph, 
     fadj, 
     badj,
@@ -103,7 +103,7 @@ include("persistence.jl")
 const SGraph = StaticGraph
 const SDiGraph = StaticDiGraph
 
-const StaticEdgeIter{G} = LightGraphs.SimpleGraphs.SimpleEdgeIter{G}
+const StaticEdgeIter{G} = Graphs.SimpleGraphs.SimpleEdgeIter{G}
 
 eltype(::Type{StaticEdgeIter{StaticGraph{T, U}}}) where T where U = StaticGraphEdge{T}
 eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGraphEdge{T}
