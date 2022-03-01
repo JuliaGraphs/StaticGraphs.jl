@@ -1,5 +1,6 @@
 import Graphs.LinAlg: adjacency_matrix
 import Graphs: induced_subgraph
+import Graphs: complement
 
 adjacency_matrix(g::StaticGraph{I,U}, T::DataType; dir = :out!) where I<:Integer where U<:Integer =
     SparseMatrixCSC{T,I}(nv(g), nv(g), g.f_ind, g.f_vec, ones(T, ne(g)*2))
@@ -60,4 +61,33 @@ function induced_subgraph(g::StaticGraph{I, U}, vlist::AbstractVector{T}) where 
         end
     end
     return StaticGraph(f_vec, f_ind), T.(vlist)
+end
+
+function complement(g::StaticGraph)
+    gnv = nv(g)
+    ne(g) == gnv*(gnv-1) / 2 && return StaticGraph(gnv, Array{Tuple{UInt8, UInt8},1}())
+    sd1 = Array{Tuple{eltype(g), eltype(g)}, 1}()
+    for i = one(eltype(g)):gnv
+        for j = (i + one(eltype(g))):gnv
+        if !has_edge(g, i, j)
+            push!(sd1, (i, j))
+        end
+        end
+    end
+    ds1 = [Tuple(reverse(e)) for e in sd1]
+    sd = sort(vcat(sd1, ds1))
+    return StaticGraph(gnv, sd)
+end
+
+function complement(g::StaticDiGraph)
+    gnv = nv(g)
+    ne(g) == gnv*(gnv-1) && return StaticDiGraph(gnv, Array{Tuple{UInt8, UInt8},1}())
+    f_sd = Array{Tuple{eltype(g), eltype(g)}, 1}()
+    for i = one(eltype(g)):gnv, j = one(eltype(g)):gnv
+        if i != j && !has_edge(g, i, j)
+            push!(f_sd, (i, j))
+        end
+    end
+    b_sd = sort([Tuple(reverse(e)) for e in f_sd])
+    return StaticDiGraph(gnv, f_sd, b_sd)
 end
