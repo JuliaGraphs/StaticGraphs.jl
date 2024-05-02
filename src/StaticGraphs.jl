@@ -61,6 +61,11 @@ function show(io::IO, g::AbstractStaticGraph)
     print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
 end
 
+function show(io::IO, ::MIME"text/plain", g::AbstractStaticGraph)
+    dir = is_directed(g) ? "directed" : "undirected"
+    print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
+end
+
 @inline function _fvrange(g::AbstractStaticGraph, s::Integer)
     @inbounds r_start = g.f_ind[s]
     @inbounds r_end = g.f_ind[s + 1] - 1
