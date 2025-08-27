@@ -1,6 +1,6 @@
 name = "StaticGraphs"
 uuid = "4c8beaf5-199b-59a0-a7f2-21d17de635b6"
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
