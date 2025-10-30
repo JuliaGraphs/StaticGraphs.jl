@@ -1,7 +1,6 @@
 module StaticGraphs
 
 using Graphs
-using JLD2
 using SparseArrays
 
 import Base:
