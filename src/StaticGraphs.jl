@@ -114,4 +114,19 @@ eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGr
 
 include("overrides.jl")
 
+function __init__()
+    # Register error hint for the `loadsg` and `savesg` functions
+    if isdefined(Base.Experimental, :register_error_hint)
+        Base.Experimental.register_error_hint(MethodError) do io, exc, _, _
+            if exc.f === loadsg
+                print(io, "\n\nIn order to load static graphs from binary files, you need \
+                to load the JLD2.jl package.")
+            elseif exc.f === savesg
+                print(io,"\n\nIn order to save static graphs to binary files, you need to \
+                load the JLD2.jl package.")
+            end
+        end
+    end
+end
+
 end # module

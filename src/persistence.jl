@@ -7,15 +7,8 @@ abstract type StaticGraphFormat <: AbstractGraphFormat end
 struct SGFormat <: StaticGraphFormat end
 struct SDGFormat <: StaticGraphFormat end
 
-function loadsg(args...)
-    error("In order to load static graphs from binary files, you need to load the JLD2.jl \
-    package")
-end
-
-function savesg(args...)
-    error("In order to save static graphs to binary files, you need to load the JLD2.jl \
-    package")
-end
+function loadsg end
+function savesg end
 
 loadgraph(fn::AbstractString, gname::String, s::StaticGraphFormat) = loadsg(fn, s)
 savegraph(fn::AbstractString, g::AbstractStaticGraph) = savesg(fn, g)
