@@ -11,8 +11,8 @@ struct StaticDiGraph{T<:Integer, U<:Integer} <: AbstractStaticGraph{T, U}
 end
 
 @inline function _bvrange(g::StaticDiGraph, s)
-    @inbounds r_start = g.b_ind[s]
-    @inbounds r_end = g.b_ind[s + 1] - 1
+    r_start = g.b_ind[s]
+    r_end = g.b_ind[s + 1] - 1
     return r_start:r_end
 end
 
