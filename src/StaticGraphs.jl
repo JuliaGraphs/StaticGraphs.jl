@@ -66,8 +66,8 @@ function show(io::IO, ::MIME"text/plain", g::AbstractStaticGraph)
 end
 
 @inline function _fvrange(g::AbstractStaticGraph, s::Integer)
-    @inbounds r_start = g.f_ind[s]
-    @inbounds r_end = g.f_ind[s + 1] - 1
+    r_start = g.f_ind[s]
+    r_end = g.f_ind[s + 1] - 1
     return r_start:r_end
 end
 
