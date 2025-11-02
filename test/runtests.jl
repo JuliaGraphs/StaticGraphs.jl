@@ -1,6 +1,7 @@
 using StaticGraphs
 using Graphs
 using Graphs.SimpleGraphs
+using JLD2
 using Test
 
 const testdir = dirname(@__FILE__)

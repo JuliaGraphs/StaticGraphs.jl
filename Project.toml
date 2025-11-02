@@ -1,19 +1,25 @@
 name = "StaticGraphs"
 uuid = "4c8beaf5-199b-59a0-a7f2-21d17de635b6"
-version = "0.3.1"
+version = "0.4.0"
 
 [deps]
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
-JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+
+[weakdeps]
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+
+[extensions]
+StaticGraphsJLD2Ext = "JLD2"
 
 [compat]
 Graphs = "1.4"
-JLD2 = "0.1 - 0.4"
-julia = "1"
+JLD2 = "0.1 - 0.6"
+julia = "1.10"
 
 [extras]
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["JLD2", "Test"]

@@ -1,7 +1,6 @@
 module StaticGraphs
 
 using Graphs
-using JLD2
 using SparseArrays
 
 import Base:
@@ -61,6 +60,11 @@ function show(io::IO, g::AbstractStaticGraph)
     print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
 end
 
+function show(io::IO, ::MIME"text/plain", g::AbstractStaticGraph)
+    dir = is_directed(g) ? "directed" : "undirected"
+    print(io, "{$(nv(g)), $(ne(g))} $dir simple static {$(vectype(g)), $(indtype(g))} graph")
+end
+
 @inline function _fvrange(g::AbstractStaticGraph, s::Integer)
     @inbounds r_start = g.f_ind[s]
     @inbounds r_end = g.f_ind[s + 1] - 1
@@ -109,5 +113,20 @@ eltype(::Type{StaticEdgeIter{StaticGraph{T, U}}}) where T where U = StaticGraphE
 eltype(::Type{StaticEdgeIter{StaticDiGraph{T, U}}}) where T where U = StaticDiGraphEdge{T}
 
 include("overrides.jl")
+
+function __init__()
+    # Register error hint for the `loadsg` and `savesg` functions
+    if isdefined(Base.Experimental, :register_error_hint)
+        Base.Experimental.register_error_hint(MethodError) do io, exc, _, _
+            if exc.f === loadsg
+                print(io, "\n\nIn order to load static graphs from binary files, you need \
+                to load the JLD2.jl package.")
+            elseif exc.f === savesg
+                print(io,"\n\nIn order to save static graphs to binary files, you need to \
+                load the JLD2.jl package.")
+            end
+        end
+    end
+end
 
 end # module
