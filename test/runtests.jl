@@ -144,4 +144,10 @@ const testdir = dirname(@__FILE__)
         mktemp(writegraphs)
     end
 
+    @testset "issue #33" begin
+        g = SimpleDiGraph([0 1 1; 0 0 1; 0 0 0])
+        gg = StaticDiGraph(g)
+        @test_throws BoundsError neighbors(gg, typemax(Int))
+    end
+
 end # StaticGraphs
