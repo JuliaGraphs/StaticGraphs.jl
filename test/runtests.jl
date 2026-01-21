@@ -15,21 +15,27 @@ const testdir = dirname(@__FILE__)
     @testset "staticgraph" begin
         @test sprint(show, StaticGraph(Graph())) == "{0, 0} undirected simple static {UInt8, UInt8} graph"
         g = smallgraph(:house)
+        gc = complement(g)
         gu = squash(g)
         sg = StaticGraph(g)
+        sgc = complement(sg)
         sgu = StaticGraph(gu)
         gempty = StaticGraph()
         gdempty = StaticDiGraph()
         @test eltype(StaticGraph{UInt128, UInt128}(sgu)) == UInt128
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
+        @test sprint(show, sgc) == "{5, 4} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
-        testfn(fn, args...) =
-            @inferred(fn(hu, args...)) == 
-            @inferred(fn(sg, args...)) == 
-            @inferred(fn(sgu, args...)) == 
+        function testfn(fn, args...)
+            @inferred(fn(hu, args...)) ==
+            @inferred(fn(sg, args...)) ==
+            @inferred(fn(sgu, args...)) ==
             fn(g, args...)
-
+            @inferred(fn(sgc, args...)) ==
+            fn(gc, args...)
+        end
         @test hu == sg == sgu
+        @test sgc == StaticGraph(gc)
         @test @inferred eltype(hu) == UInt8
         @test testfn(ne)
         @test testfn(nv)
@@ -78,21 +84,27 @@ const testdir = dirname(@__FILE__)
     @testset "staticdigraph" begin
         @test sprint(show, StaticDiGraph(DiGraph())) == "{0, 0} directed simple static {UInt8, UInt8} graph"
         dg = path_digraph(5)
+        dgc = complement(dg)
         dgu = squash(dg)
         dsg = StaticDiGraph(dg)
+        dsgc = complement(dsg)
         dsgu = StaticDiGraph(dgu)
         @test eltype(StaticDiGraph{UInt128, UInt128}(dsgu)) == UInt128
         @test sprint(show, dsg) == "{5, 4} directed simple static {UInt8, UInt8} graph"
+        @test sprint(show, dsgc) == "{5, 16} directed simple static {UInt8, UInt8} graph"
         @test sprint(show, dsgu) == "{5, 4} directed simple static {UInt8, UInt8} graph"
         dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
-
-        dtestfn(fn, args...) =
-            @inferred(fn(dhu, args...)) == 
-            @inferred(fn(dsg, args...)) == 
-            @inferred(fn(dsgu, args...)) == 
+        function dtestfn(fn, args...)
+            @inferred(fn(dhu, args...)) ==
+            @inferred(fn(dsg, args...)) ==
+            @inferred(fn(dsgu, args...)) ==
             fn(dg, args...)
+            @inferred(fn(dsgc, args...)) ==
+            fn(dgc, args...)
+        end
 
         @test dhu == dsg == dsgu
+        @test dsgc == StaticDiGraph(dgc)
         @test @inferred eltype(dhu) == UInt8
         @test dtestfn(ne)
         @test dtestfn(nv)
