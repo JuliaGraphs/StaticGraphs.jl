@@ -23,9 +23,9 @@ const testdir = dirname(@__FILE__)
         @test sprint(show, sg) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         @test sprint(show, sgu) == "{5, 6} undirected simple static {UInt8, UInt8} graph"
         testfn(fn, args...) =
-            @inferred(fn(hu, args...)) == 
-            @inferred(fn(sg, args...)) == 
-            @inferred(fn(sgu, args...)) == 
+            @inferred(fn(hu, args...)) ==
+            @inferred(fn(sg, args...)) ==
+            @inferred(fn(sgu, args...)) ==
             fn(g, args...)
 
         @test hu == sg == sgu
@@ -86,9 +86,9 @@ const testdir = dirname(@__FILE__)
         dhu = loadgraph(joinpath(testdir, "testdata", "pathdg-uint8.jsg"), SDGFormat())
 
         dtestfn(fn, args...) =
-            @inferred(fn(dhu, args...)) == 
-            @inferred(fn(dsg, args...)) == 
-            @inferred(fn(dsgu, args...)) == 
+            @inferred(fn(dhu, args...)) ==
+            @inferred(fn(dsg, args...)) ==
+            @inferred(fn(dsgu, args...)) ==
             fn(dg, args...)
 
         @test dhu == dsg == dsgu
