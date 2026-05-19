@@ -6,7 +6,6 @@ using Test
 
 const testdir = dirname(@__FILE__)
 
-    
 @testset "StaticGraphs" begin
 
     hu = loadgraph(joinpath(testdir, "testdata", "house-uint8.jsg"), SGFormat())
