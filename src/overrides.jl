@@ -20,18 +20,18 @@ function induced_subgraph(g::StaticDiGraph{I, U}, vlist::AbstractVector{T}) wher
     b_vec = Vector{I}()
     f_ind = Vector{U}([1])
     b_ind = Vector{U}([1])
-    
+
     let vset = I.(vlist) # needed because of julialang/julia/ issue #15276
         sizehint!(f_ind, vlist_len+1)
         sizehint!(b_ind, vlist_len+1)
-    
+
         vlist_len == length(vset) || throw(ArgumentError("Vertices in subgraph list must be unique"))
         fpos = 1
         bpos = 1
         @inbounds for v in vlist
             o = filter(x -> x in vset, outneighbors(g, v))
             i = filter(x -> x in vset, inneighbors(g, v))
-        
+
             fpos += length(o)
             bpos += length(i)
 
