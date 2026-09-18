@@ -15,6 +15,7 @@ StaticGraphsJLD2Ext = "JLD2"
 [compat]
 Graphs = "1.4"
 JLD2 = "0.1 - 0.6"
+SparseArrays = "1.10"
 julia = "1.10"
 
 [extras]
